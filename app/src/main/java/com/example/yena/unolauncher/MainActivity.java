@@ -13,6 +13,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private int dotsCount;
     private ImageView[] dots;
 
-    private int layoutWidth, layoutHeight, iconSize;
+    private int displayWidth, displayHeight, iconSize;
+    private int viewPagerWidth, viewPagerHeight;
     private int columnNumber, rowNumber, maxAppNumPerPage, pageCount;
 
     private List<ResolveInfo>pkgAppsList;
@@ -54,14 +56,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         calculateSize();
 //        linearLayout.setPadding(calculatePadding(layoutWidth),calculatePadding(layoutHeight),
 //                calculatePadding(layoutWidth),calculatePadding(layoutHeight));
-
-        if(isTablet()){
-            columnNumber = TABLET_COLUMN_NUMBER;
-            rowNumber = TABLET_ROW_NUMBER;
-        } else{
-            columnNumber = PHONE_COLUMN_NUMBER;
-            rowNumber = PHONE_ROW_NUMBER;
-        }
 
         maxAppNumPerPage = columnNumber * rowNumber;
 
@@ -130,6 +124,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void init(){
+        if(isTablet()){
+            columnNumber = TABLET_COLUMN_NUMBER;
+            rowNumber = TABLET_ROW_NUMBER;
+        } else{
+            columnNumber = PHONE_COLUMN_NUMBER;
+            rowNumber = PHONE_ROW_NUMBER;
+        }
+
         llMain = (LinearLayout)findViewById(R.id.ll_main);
         rlTitle = (RelativeLayout)findViewById(R.id.rl_title);
         viewPager = (ViewPager) findViewById(R.id.vp_main);
@@ -150,15 +152,24 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void calculateSize(){
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        layoutHeight = displaymetrics.heightPixels / (int)getResources().getDisplayMetrics().density ;
-        layoutWidth = displaymetrics.widthPixels / (int)getResources().getDisplayMetrics().density ;
+        displayHeight = displaymetrics.heightPixels / (int)getResources().getDisplayMetrics().density ;
+        displayWidth = displaymetrics.widthPixels / (int)getResources().getDisplayMetrics().density ;
+
         double rate = (double)LAYOUT_VIEWPAGER_WEIGHT / (double)(LAYOUT_TITLE_WEIGHT+LAYOUT_VIEWPAGER_WEIGHT+LAYOUT_DOTS_WEIGHT);
+        viewPagerWidth = displayWidth;
+        viewPagerHeight = (int)(displayHeight * rate);
         Log.d("rate",rate+"");
-        if(layoutWidth >= layoutHeight){
-            iconSize = (int)(rate * layoutHeight / (columnNumber+1));
+        if(displayWidth >= displayHeight){
+            iconSize = viewPagerHeight / (columnNumber);
+            Log.d("display calculate","displayWidth > displayHeight");
         } else{
-            iconSize = (int)(rate * layoutWidth / (columnNumber+1));
+            iconSize = viewPagerWidth / (columnNumber);
+            Log.d("display calculate","displayHeight > displayWidth");
         }
+        Log.d("displayWidth",displayWidth+"");
+        Log.d("displayHeight",displayHeight+"");
+        Log.d("columnNumber",columnNumber+"");
+        Toast.makeText(getApplicationContext(),"iconSize : " + iconSize,Toast.LENGTH_LONG).show();
     }
 
     private boolean isTablet(){

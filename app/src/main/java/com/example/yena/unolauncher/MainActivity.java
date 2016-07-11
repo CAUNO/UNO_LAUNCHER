@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             }else{
                 apps = pkgAppsList.subList(i*maxAppNumPerPage,(i+1)*maxAppNumPerPage);
             }
-            fragments.add(new AppListFragment(apps, iconSize, columnNumber));
+            fragments.add(new AppListFragment(apps, iconSize, columnNumber, rowNumber, viewPagerWidth, viewPagerHeight));
         }
     }
 

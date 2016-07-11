@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -25,9 +27,12 @@ public class AppListFragment extends Fragment {
     private List<ResolveInfo> apps;
     private int iconSize;
     private int columnNumber;
+    private int rowNumber;
+    private int viewPagerWidth;
+    private int viewPagerHeight;
     private GridView gridView;
 
-    public AppListFragment(){
+    public AppListFragment() {
 
     }
 
@@ -38,6 +43,16 @@ public class AppListFragment extends Fragment {
         this.columnNumber = columnNumber;
     }
 
+    @SuppressLint("ValidFragment")
+    public AppListFragment(List<ResolveInfo> apps, int iconSize, int columnNumber, int rowNumber, int viewPagerWidth, int viewPagerHeight) {
+        this.apps = apps;
+        this.iconSize = iconSize;
+        this.columnNumber = columnNumber;
+        this.rowNumber = rowNumber;
+        this.viewPagerWidth = viewPagerWidth;
+        this.viewPagerHeight = viewPagerHeight;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +61,8 @@ public class AppListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_app_list, container, false);
-        gridView = (GridView)view.findViewById(R.id.gv_app_list);
+        View view = inflater.inflate(R.layout.fragment_app_list, container, false);
+        gridView = (GridView) view.findViewById(R.id.gv_app_list);
         gridView.setColumnWidth(iconSize);
         gridView.setNumColumns(columnNumber);
         gridView.setAdapter(new MainBaseAdapter(getActivity().getApplicationContext(), apps));
@@ -69,7 +84,7 @@ public class AppListFragment extends Fragment {
     AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            ResolveInfo clickedResolveInfo = (ResolveInfo)parent.getItemAtPosition(position);
+            ResolveInfo clickedResolveInfo = (ResolveInfo) parent.getItemAtPosition(position);
             ActivityInfo clickedActivityInfo = clickedResolveInfo.activityInfo;
 
             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -86,10 +101,10 @@ public class AppListFragment extends Fragment {
         private Context context;
         private List<ResolveInfo> appList;
 
-        MainBaseAdapter(Context context, List<ResolveInfo> appList){
+        MainBaseAdapter(Context context, List<ResolveInfo> appList) {
             this.context = context;
             this.appList = appList;
-            inflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
@@ -108,23 +123,31 @@ public class AppListFragment extends Fragment {
             ResolveInfo resolveInfo = appList.get(position);
             View view;
 
-            if(convertView == null){
+            if (convertView == null) {
                 view = inflater.inflate(R.layout.item, parent, false);
                 Log.d("AppListFragment", "convertView is null");
-            } else{
+            } else {
                 view = convertView;
             }
-                ImageView imageView = (ImageView) view.findViewById(R.id.iv_item);
-                ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) imageView.getLayoutParams();
-                params.width = iconSize;
-                params.height = iconSize;
-                imageView.setLayoutParams(params);
-                TextView textView = (TextView) view.findViewById(R.id.tv_item);
-                imageView.setImageDrawable(resolveInfo.loadIcon(getActivity().getPackageManager()));
-                textView.setText(resolveInfo.loadLabel(getActivity().getPackageManager()).toString());
-                ViewGroup.LayoutParams tvParams = (ViewGroup.LayoutParams) textView.getLayoutParams();
-                tvParams.width = iconSize;
-                textView.setLayoutParams(tvParams);
+            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.ll_item);
+            ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) linearLayout.getLayoutParams();
+            lp.width = (int) (viewPagerWidth / columnNumber);
+            lp.height = (int) (viewPagerHeight / rowNumber);
+            Log.d("lp","width : "+lp.width);
+            Log.d("lp","height : "+lp.height);
+            linearLayout.setLayoutParams(lp);
+
+            ImageView imageView = (ImageView) view.findViewById(R.id.iv_item);
+            ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) imageView.getLayoutParams();
+            params.width = iconSize;
+            params.height = iconSize;
+            imageView.setLayoutParams(params);
+            TextView textView = (TextView) view.findViewById(R.id.tv_item);
+            imageView.setImageDrawable(resolveInfo.loadIcon(getActivity().getPackageManager()));
+            textView.setText(resolveInfo.loadLabel(getActivity().getPackageManager()).toString());
+//            ViewGroup.LayoutParams tvParams = (ViewGroup.LayoutParams) textView.getLayoutParams();
+//            tvParams.width = iconSize;
+//            textView.setLayoutParams(tvParams);
             return view;
         }
 

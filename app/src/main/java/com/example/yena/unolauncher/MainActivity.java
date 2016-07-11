@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -17,16 +19,21 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
-    private static final int TABLET_COLUMN_NUMBER = 5;
+    private static final int TABLET_COLUMN_NUMBER = 8;
     private static final int PHONE_COLUMN_NUMBER = 4;
     private static final int TABLET_ROW_NUMBER = 4;
     private static final int PHONE_ROW_NUMBER = 5;
+
+    private static final int LAYOUT_TITLE_WEIGHT = 1;
+    private static final int LAYOUT_VIEWPAGER_WEIGHT = 8;
+    private static final int LAYOUT_DOTS_WEIGHT = 1;
 
     private static final double PADDING_RATE = 0.05;
 
     private ViewPager viewPager;
     private AppListPagerAdapter pagerAdapter;
-    private RelativeLayout relativeLayout;
+    private LinearLayout llMain;
+    private RelativeLayout rlTitle;
     private LinearLayout llPageIndicator;
     private List<AppListFragment> fragments = new ArrayList<AppListFragment>();
 
@@ -43,8 +50,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        relativeLayout = (RelativeLayout)findViewById(R.id.rl_main);
-        llPageIndicator = (LinearLayout)findViewById(R.id.ll_count_dots);
+        init();
         calculateSize();
 //        linearLayout.setPadding(calculatePadding(layoutWidth),calculatePadding(layoutHeight),
 //                calculatePadding(layoutWidth),calculatePadding(layoutHeight));
@@ -70,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         }
         createFragments();
 
-        viewPager = (ViewPager) findViewById(R.id.vp_main);
+
         viewPager.addOnPageChangeListener(this);
         pagerAdapter = new AppListPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(pagerAdapter);
@@ -123,12 +129,31 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         dots[0].setImageDrawable(getResources().getDrawable(R.drawable.selected_item_dot));
     }
 
+    private void init(){
+        llMain = (LinearLayout)findViewById(R.id.ll_main);
+        rlTitle = (RelativeLayout)findViewById(R.id.rl_title);
+        viewPager = (ViewPager) findViewById(R.id.vp_main);
+        llPageIndicator = (LinearLayout)findViewById(R.id.ll_count_dots);
+
+        setLayoutWeight();
+    }
+
+    private void setLayoutWeight(){
+        llMain.setWeightSum(LAYOUT_TITLE_WEIGHT + LAYOUT_VIEWPAGER_WEIGHT + LAYOUT_DOTS_WEIGHT);
+
+        rlTitle.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, LAYOUT_TITLE_WEIGHT));
+        viewPager.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, LAYOUT_VIEWPAGER_WEIGHT));
+        llPageIndicator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, LAYOUT_DOTS_WEIGHT));
+
+    }
+
     private void calculateSize(){
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         layoutHeight = displaymetrics.heightPixels / (int)getResources().getDisplayMetrics().density ;
         layoutWidth = displaymetrics.widthPixels / (int)getResources().getDisplayMetrics().density ;
-        double rate = 0.9;
+        double rate = (double)LAYOUT_VIEWPAGER_WEIGHT / (double)(LAYOUT_TITLE_WEIGHT+LAYOUT_VIEWPAGER_WEIGHT+LAYOUT_DOTS_WEIGHT);
+        Log.d("rate",rate+"");
         if(layoutWidth >= layoutHeight){
             iconSize = (int)(rate * layoutHeight / (columnNumber+1));
         } else{

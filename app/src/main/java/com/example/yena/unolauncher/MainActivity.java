@@ -62,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         pkgAppsList = getPackageManager().queryIntentActivities(mainIntent, 0);
 
+        //TODO 이 앱은 안뜨게 하기
+
         if(pkgAppsList.size() % maxAppNumPerPage == 0){
             pageCount = (pkgAppsList.size() / maxAppNumPerPage);
         } else{

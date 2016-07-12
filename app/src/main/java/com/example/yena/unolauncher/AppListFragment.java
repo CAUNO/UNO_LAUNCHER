@@ -145,9 +145,11 @@ public class AppListFragment extends Fragment {
             TextView textView = (TextView) view.findViewById(R.id.tv_item);
             imageView.setImageDrawable(resolveInfo.loadIcon(getActivity().getPackageManager()));
             textView.setText(resolveInfo.loadLabel(getActivity().getPackageManager()).toString());
-//            ViewGroup.LayoutParams tvParams = (ViewGroup.LayoutParams) textView.getLayoutParams();
-//            tvParams.width = iconSize;
-//            textView.setLayoutParams(tvParams);
+
+            BadgeView badgeView = new BadgeView(getActivity().getApplicationContext(), imageView);
+            badgeView.setText("x");
+            badgeView.show();
+
             return view;
         }
 

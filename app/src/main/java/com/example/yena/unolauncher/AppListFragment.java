@@ -18,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -129,13 +130,13 @@ public class AppListFragment extends Fragment {
             } else {
                 view = convertView;
             }
-            LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.ll_item);
-            ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) linearLayout.getLayoutParams();
+            RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.ll_item);
+            ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) relativeLayout.getLayoutParams();
             lp.width = (int) (viewPagerWidth / columnNumber);
             lp.height = (int) (viewPagerHeight / rowNumber);
             Log.d("lp","width : "+lp.width);
             Log.d("lp","height : "+lp.height);
-            linearLayout.setLayoutParams(lp);
+            relativeLayout.setLayoutParams(lp);
 
             ImageView imageView = (ImageView) view.findViewById(R.id.iv_item);
             ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) imageView.getLayoutParams();
@@ -149,6 +150,7 @@ public class AppListFragment extends Fragment {
             BadgeView badgeView = new BadgeView(getActivity().getApplicationContext(), imageView);
             badgeView.setText("x");
             badgeView.show();
+            badgeView.hide();
 
             return view;
         }

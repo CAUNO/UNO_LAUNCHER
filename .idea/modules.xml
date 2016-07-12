@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/UNOLauncher.iml" filepath="$PROJECT_DIR$/UNOLauncher.iml" />
+      <module fileurl="file://$PROJECT_DIR$/UNO_Launcher.iml" filepath="$PROJECT_DIR$/UNO_Launcher.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

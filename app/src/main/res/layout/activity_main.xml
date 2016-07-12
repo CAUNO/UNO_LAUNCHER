@@ -18,15 +18,16 @@
             android:layout_height="wrap_content"
             android:text="@string/title"
             android:textAlignment="center"
-            android:textColor="@color/black"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerInParent="true"
+            android:textColor="@color/black"/>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ib_delete"
             android:background="@android:drawable/ic_delete"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
 
     </RelativeLayout>
 

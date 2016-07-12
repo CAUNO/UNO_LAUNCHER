@@ -58,15 +58,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setContentView(R.layout.activity_main);
 
         init();
-        calculateSize();
-
-        maxAppNumPerPage = columnNumber * rowNumber;
 
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
         List<ResolveInfo> allPkgAppsList = getPackageManager().queryIntentActivities(mainIntent, 0);
-        //TODO 이 앱은 안뜨게 하기
 
         createFragments(MAIN_MODE,getPackageManager().queryIntentActivities(mainIntent, 0));
 
@@ -102,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void setUIPageViewController() {
-
+        llPageIndicator.removeAllViews();
         dotsCount = pagerAdapter.getCount();
         dots = new ImageView[dotsCount];
 
@@ -124,13 +120,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void init() {
-        if (isTablet()) {
-            columnNumber = TABLET_COLUMN_NUMBER;
-            rowNumber = TABLET_ROW_NUMBER;
-        } else {
-            columnNumber = PHONE_COLUMN_NUMBER;
-            rowNumber = PHONE_ROW_NUMBER;
-        }
+
+        calculateSize();
+
+        maxAppNumPerPage = columnNumber * rowNumber;
 
         llMain = (LinearLayout) findViewById(R.id.ll_main);
         rlTitle = (RelativeLayout) findViewById(R.id.rl_title);
@@ -139,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         ibDelete = (ImageButton) findViewById(R.id.ib_delete);
 
         setLayoutWeight();
+        setListener();
     }
 
     private void setListener(){
@@ -159,13 +153,23 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void setLayoutWeight() {
         llMain.setWeightSum(LAYOUT_TITLE_WEIGHT + LAYOUT_VIEWPAGER_WEIGHT + LAYOUT_DOTS_WEIGHT);
 
-        rlTitle.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, LAYOUT_TITLE_WEIGHT));
-        viewPager.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, LAYOUT_VIEWPAGER_WEIGHT));
-        llPageIndicator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, LAYOUT_DOTS_WEIGHT));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_TITLE_WEIGHT);
+        layoutParams.setMargins((int)(0.1*displayWidth),0,(int)(0.1*displayWidth),0);
+        rlTitle.setLayoutParams(layoutParams);
+        viewPager.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0, LAYOUT_VIEWPAGER_WEIGHT));
+        llPageIndicator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0, LAYOUT_DOTS_WEIGHT));
 
     }
 
     private void calculateSize() {
+        if (isTablet()) {
+            columnNumber = TABLET_COLUMN_NUMBER;
+            rowNumber = TABLET_ROW_NUMBER;
+        } else {
+            columnNumber = PHONE_COLUMN_NUMBER;
+            rowNumber = PHONE_ROW_NUMBER;
+        }
+
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         displayHeight = displaymetrics.heightPixels / (int) getResources().getDisplayMetrics().density;
@@ -223,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         }
 
         for(int i =0; i<pkgAppsList.size(); i++){
-            if(pkgAppsList.get(i).loadLabel(getPackageManager()).toString().equals(APPLICATION_NAME)){
+            if(pkgAppsList.get(i).loadLabel(getPackageManager()).toString().equals(getResources().getString(R.string.app_name))){
                 pkgAppsList.remove(i);
             }
         }
@@ -241,7 +245,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             } else {
                 apps = pkgAppsList.subList(i * maxAppNumPerPage, (i + 1) * maxAppNumPerPage);
             }
-            fragments.add(new AppListFragment(apps, iconSize, columnNumber, rowNumber, viewPagerWidth, viewPagerHeight));
+            if(mode == MAIN_MODE){
+                fragments.add(new AppListFragment(apps, iconSize, columnNumber, rowNumber, viewPagerWidth, viewPagerHeight));
+            } else if(mode == DELETE_MODE){
+                fragments.add(new AppListFragment(apps, iconSize, columnNumber, rowNumber, viewPagerWidth, viewPagerHeight, true));
+            }
         }
     }
 

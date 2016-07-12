@@ -31,6 +31,7 @@ public class AppListFragment extends Fragment {
     private int rowNumber;
     private int viewPagerWidth;
     private int viewPagerHeight;
+    private boolean badgeViewVisibility;
     private GridView gridView;
 
     public AppListFragment() {
@@ -52,7 +53,20 @@ public class AppListFragment extends Fragment {
         this.rowNumber = rowNumber;
         this.viewPagerWidth = viewPagerWidth;
         this.viewPagerHeight = viewPagerHeight;
+        this.badgeViewVisibility = false;
     }
+
+    @SuppressLint("ValidFragment")
+    public AppListFragment(List<ResolveInfo> apps, int iconSize, int columnNumber, int rowNumber, int viewPagerWidth, int viewPagerHeight, boolean badgeViewVisibility){
+        this.apps = apps;
+        this.iconSize = iconSize;
+        this.columnNumber = columnNumber;
+        this.rowNumber = rowNumber;
+        this.viewPagerWidth = viewPagerWidth;
+        this.viewPagerHeight = viewPagerHeight;
+        this.badgeViewVisibility = badgeViewVisibility;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,10 +161,11 @@ public class AppListFragment extends Fragment {
             imageView.setImageDrawable(resolveInfo.loadIcon(getActivity().getPackageManager()));
             textView.setText(resolveInfo.loadLabel(getActivity().getPackageManager()).toString());
 
-            BadgeView badgeView = new BadgeView(getActivity().getApplicationContext(), imageView);
-            badgeView.setText("x");
-            badgeView.show();
-            badgeView.hide();
+            if(badgeViewVisibility){
+                BadgeView badgeView = new BadgeView(getActivity().getApplicationContext(), imageView);
+                badgeView.setText("x");
+                badgeView.show();
+            }
 
             return view;
         }

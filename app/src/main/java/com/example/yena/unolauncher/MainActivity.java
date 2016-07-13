@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private static final int MAIN_MODE = 0, DELETE_MODE = 1;
 
-    private static final String APPLICATION_NAME = "UNOLauncher";
-
     private ViewPager viewPager;
     private AppListPagerAdapter pagerAdapter;
     private LinearLayout llMain;
@@ -50,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private int viewPagerWidth, viewPagerHeight;
     private int columnNumber, rowNumber, maxAppNumPerPage, pageCount;
 
+    private int mode;
+
     private List<ResolveInfo> pkgAppsList = new ArrayList<>();
 
     @Override
@@ -58,23 +58,23 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setContentView(R.layout.activity_main);
 
         init();
+    }
 
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-        List<ResolveInfo> allPkgAppsList = getPackageManager().queryIntentActivities(mainIntent, 0);
-
-        createFragments(MAIN_MODE,getPackageManager().queryIntentActivities(mainIntent, 0));
-
-
-        viewPager.addOnPageChangeListener(this);
-        pagerAdapter = new AppListPagerAdapter(getSupportFragmentManager(), fragments);
-        viewPager.setAdapter(pagerAdapter);
-        setUIPageViewController();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        resetAdapter();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                if(mode == DELETE_MODE){
+                    mode = MAIN_MODE;
+                    resetAdapter();
+                }
+        }
         return false;
     }
 
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
 
-            params.setMargins(4, 0, 4, 0);
+            params.setMargins((int)(0.01*displayWidth), 0,(int)(0.01*displayWidth), 0);
 
             llPageIndicator.addView(dots[i], params);
         }
@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         calculateSize();
 
+        mode = MAIN_MODE;
         maxAppNumPerPage = columnNumber * rowNumber;
 
         llMain = (LinearLayout) findViewById(R.id.ll_main);
@@ -131,21 +132,22 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         llPageIndicator = (LinearLayout) findViewById(R.id.ll_count_dots);
         ibDelete = (ImageButton) findViewById(R.id.ib_delete);
 
+        viewPager.addOnPageChangeListener(this);
+
         setLayoutWeight();
         setListener();
     }
 
-    private void setListener(){
+    private void setListener() {
         ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_MAIN, null);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                createFragments(DELETE_MODE,getPackageManager().queryIntentActivities(intent, 0));
-
-                pagerAdapter = new AppListPagerAdapter(getSupportFragmentManager(), fragments);
-                viewPager.setAdapter(pagerAdapter);
-                setUIPageViewController();
+                if (mode == MAIN_MODE) {
+                    mode = DELETE_MODE;
+                } else if (mode == DELETE_MODE) {
+                    mode = MAIN_MODE;
+                }
+                resetAdapter();
             }
         });
     }
@@ -154,11 +156,21 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         llMain.setWeightSum(LAYOUT_TITLE_WEIGHT + LAYOUT_VIEWPAGER_WEIGHT + LAYOUT_DOTS_WEIGHT);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_TITLE_WEIGHT);
-        layoutParams.setMargins((int)(0.1*displayWidth),0,(int)(0.1*displayWidth),0);
+        layoutParams.setMargins((int) (0.05 * displayWidth), 0, (int) (0.05 * displayWidth), 0);
         rlTitle.setLayoutParams(layoutParams);
-        viewPager.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0, LAYOUT_VIEWPAGER_WEIGHT));
-        llPageIndicator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0, LAYOUT_DOTS_WEIGHT));
+        viewPager.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_VIEWPAGER_WEIGHT));
+        llPageIndicator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_DOTS_WEIGHT));
 
+    }
+
+    private void resetAdapter(){
+        Intent intent = new Intent(Intent.ACTION_MAIN, null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        createFragments(mode, getPackageManager().queryIntentActivities(intent, 0));
+
+        pagerAdapter = new AppListPagerAdapter(getSupportFragmentManager(), fragments);
+        viewPager.setAdapter(pagerAdapter);
+        setUIPageViewController();
     }
 
     private void calculateSize() {
@@ -214,20 +226,20 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         pkgAppsList.clear();
         fragments.clear();
 
-        if (mode == MAIN_MODE){
+        if (mode == MAIN_MODE) {
             pkgAppsList = allPkgAppsList;
-        } else if (mode == DELETE_MODE){
+        } else if (mode == DELETE_MODE) {
             for (int i = 0; i < allPkgAppsList.size(); i++) {
                 if (!isSystemPackage(allPkgAppsList.get(i))) {
                     pkgAppsList.add(allPkgAppsList.get(i));
                 }
             }
-        } else{
-            Log.d("createFragments","mode is not correct");
+        } else {
+            Log.d("createFragments", "mode is not correct");
         }
 
-        for(int i =0; i<pkgAppsList.size(); i++){
-            if(pkgAppsList.get(i).loadLabel(getPackageManager()).toString().equals(getResources().getString(R.string.app_name))){
+        for (int i = 0; i < pkgAppsList.size(); i++) {
+            if (pkgAppsList.get(i).loadLabel(getPackageManager()).toString().equals(getResources().getString(R.string.app_name))) {
                 pkgAppsList.remove(i);
             }
         }
@@ -245,9 +257,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             } else {
                 apps = pkgAppsList.subList(i * maxAppNumPerPage, (i + 1) * maxAppNumPerPage);
             }
-            if(mode == MAIN_MODE){
+            if (mode == MAIN_MODE) {
                 fragments.add(new AppListFragment(apps, iconSize, columnNumber, rowNumber, viewPagerWidth, viewPagerHeight));
-            } else if(mode == DELETE_MODE){
+            } else if (mode == DELETE_MODE) {
                 fragments.add(new AppListFragment(apps, iconSize, columnNumber, rowNumber, viewPagerWidth, viewPagerHeight, true));
             }
         }

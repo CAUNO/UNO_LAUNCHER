@@ -23,6 +23,8 @@ import java.util.List;
 
 public class AppListFragment extends Fragment {
 
+    private static final double HEIGHT_RATE = 0.95;
+
     private List<ResolveInfo> apps;
     private int iconSize;
     private int columnNumber;
@@ -101,7 +103,7 @@ public class AppListFragment extends Fragment {
             ActivityInfo clickedActivityInfo = clickedResolveInfo.activityInfo;
 
             if(deleteBadgeViewVisibility){
-                Uri packageURI = Uri.parse("package:" + clickedResolveInfo.resolvePackageName);
+                Uri packageURI = Uri.parse("package:" + clickedActivityInfo.packageName);
                 Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                                 | Intent.FLAG_ACTIVITY_NEW_TASK
@@ -155,7 +157,7 @@ public class AppListFragment extends Fragment {
             RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.ll_item);
             ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) relativeLayout.getLayoutParams();
             lp.width = (int) (viewPagerWidth / columnNumber);
-            lp.height = (int) (viewPagerHeight / rowNumber);
+            lp.height = (int) (HEIGHT_RATE * viewPagerHeight / rowNumber);
             Log.d("lp","width : "+lp.width);
             Log.d("lp","height : "+lp.height);
             relativeLayout.setLayoutParams(lp);

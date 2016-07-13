@@ -12,12 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,7 +29,7 @@ public class AppListFragment extends Fragment {
     private int rowNumber;
     private int viewPagerWidth;
     private int viewPagerHeight;
-    private boolean badgeViewVisibility;
+    private boolean deleteBadgeViewVisibility;
     private GridView gridView;
 
     public AppListFragment() {
@@ -53,18 +51,18 @@ public class AppListFragment extends Fragment {
         this.rowNumber = rowNumber;
         this.viewPagerWidth = viewPagerWidth;
         this.viewPagerHeight = viewPagerHeight;
-        this.badgeViewVisibility = false;
+        this.deleteBadgeViewVisibility = false;
     }
 
     @SuppressLint("ValidFragment")
-    public AppListFragment(List<ResolveInfo> apps, int iconSize, int columnNumber, int rowNumber, int viewPagerWidth, int viewPagerHeight, boolean badgeViewVisibility){
+    public AppListFragment(List<ResolveInfo> apps, int iconSize, int columnNumber, int rowNumber, int viewPagerWidth, int viewPagerHeight, boolean deleteBadgeViewVisibility){
         this.apps = apps;
         this.iconSize = iconSize;
         this.columnNumber = columnNumber;
         this.rowNumber = rowNumber;
         this.viewPagerWidth = viewPagerWidth;
         this.viewPagerHeight = viewPagerHeight;
-        this.badgeViewVisibility = badgeViewVisibility;
+        this.deleteBadgeViewVisibility = deleteBadgeViewVisibility;
     }
 
 
@@ -102,11 +100,21 @@ public class AppListFragment extends Fragment {
             ResolveInfo clickedResolveInfo = (ResolveInfo) parent.getItemAtPosition(position);
             ActivityInfo clickedActivityInfo = clickedResolveInfo.activityInfo;
 
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            intent.setClassName(clickedActivityInfo.applicationInfo.packageName, clickedActivityInfo.name);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-            startActivity(intent);
+            if(deleteBadgeViewVisibility){
+                Uri packageURI = Uri.parse("package:" + clickedResolveInfo.resolvePackageName);
+                Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI)
+                        .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                | Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(uninstallIntent);
+            } else{
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                intent.setClassName(clickedActivityInfo.applicationInfo.packageName, clickedActivityInfo.name);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                startActivity(intent);
+            }
+
         }
     };
 
@@ -161,7 +169,7 @@ public class AppListFragment extends Fragment {
             imageView.setImageDrawable(resolveInfo.loadIcon(getActivity().getPackageManager()));
             textView.setText(resolveInfo.loadLabel(getActivity().getPackageManager()).toString());
 
-            if(badgeViewVisibility){
+            if(deleteBadgeViewVisibility){
                 BadgeView badgeView = new BadgeView(getActivity().getApplicationContext(), imageView);
                 badgeView.setText("x");
                 badgeView.show();

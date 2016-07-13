@@ -23,7 +23,7 @@ import java.util.List;
 
 public class AppListFragment extends Fragment {
 
-    private static final double HEIGHT_RATE = 0.95;
+    private static final double HEIGHT_RATE = 0.9;
 
     private List<ResolveInfo> apps;
     private int iconSize;

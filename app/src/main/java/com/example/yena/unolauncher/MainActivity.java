@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPagerHeight = (int) (displayHeight * rate);
         Log.d("rate", rate + "");
         if (displayWidth >= displayHeight) {
-            iconSize = viewPagerHeight / (columnNumber);
+            iconSize = (int)(0.6 * viewPagerHeight / (rowNumber));
             Log.d("display calculate", "displayWidth > displayHeight");
         } else {
             iconSize = viewPagerWidth / (columnNumber);

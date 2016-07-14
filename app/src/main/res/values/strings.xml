@@ -3,5 +3,17 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="title">우노큐브 런처</string>
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
+    <string name="ok">네</string>
+    <string name="no">아니오</string>
+    <string name="delete_app">앱 삭제하기</string>
+    <string name="change_background">테마 바꾸기</string>
+    <string name="change_grid">그리드 크기</string>
+    <string name="grid1">8 x 4</string>
+    <string name="grid2">4 x 3</string>
+    <string name="grid3">10 x 4</string>
+    <string name="grid4">5 x 4</string>
+    <string name="grid_dialog_title">그리드 선택</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

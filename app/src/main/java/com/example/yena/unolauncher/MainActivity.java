@@ -1,19 +1,28 @@
 package com.example.yena.unolauncher;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -33,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private static final int MAIN_MODE = 0, DELETE_MODE = 1;
 
+    private SharedPreferences pref;
+
     private ViewPager viewPager;
     private AppListPagerAdapter pagerAdapter;
     private LinearLayout llMain;
@@ -47,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private int displayWidth, displayHeight, iconSize;
     private int viewPagerWidth, viewPagerHeight;
     private int columnNumber, rowNumber, maxAppNumPerPage, pageCount;
+
+    private int gridValue;
 
     private int mode;
 
@@ -68,9 +81,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode){
+        switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                if(mode == DELETE_MODE){
+                if (mode == DELETE_MODE) {
                     mode = MAIN_MODE;
                     resetAdapter();
                 }
@@ -111,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
 
-            params.setMargins((int)(0.01*displayWidth), 0,(int)(0.01*displayWidth), 0);
+            params.setMargins((int) (0.01 * displayWidth), 0, (int) (0.01 * displayWidth), 0);
 
             llPageIndicator.addView(dots[i], params);
         }
@@ -123,8 +136,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         calculateSize();
 
+        pref = this.getSharedPreferences(UNOSharedPreferences.NAME, 0);
+        gridValue = pref.getInt(UNOSharedPreferences.GRID_SETTING, GridSetting.GRID1);
+
+        GridSetting gridSetting = new GridSetting(getApplicationContext(),gridValue);
+        columnNumber = gridSetting.numColumn;
+        rowNumber = gridSetting.numRow;
+
         mode = MAIN_MODE;
-        maxAppNumPerPage = columnNumber * rowNumber;
 
         llMain = (LinearLayout) findViewById(R.id.ll_main);
         rlTitle = (RelativeLayout) findViewById(R.id.rl_title);
@@ -142,14 +161,48 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mode == MAIN_MODE) {
-                    mode = DELETE_MODE;
-                } else if (mode == DELETE_MODE) {
-                    mode = MAIN_MODE;
-                }
-                resetAdapter();
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_item_delete:
+                                if (mode == MAIN_MODE) {
+                                    mode = DELETE_MODE;
+                                } else if (mode == DELETE_MODE) {
+                                    mode = MAIN_MODE;
+                                }
+                                resetAdapter();
+                                return true;
+                            case R.id.menu_item_background:
+
+                                return true;
+                            case R.id.menu_item_grid:
+                                gridChange();
+                                return true;
+                        }
+                        return false;
+                    }
+                });
+
+                popupMenu.inflate(R.menu.popup_menu);
+                popupMenu.show();
             }
         });
+    }
+
+    private void gridChange() {
+        GridSetting gridSetting = new GridSetting(getApplicationContext(),gridValue);
+        gridSetting.gridSelectDialog(MainActivity.this);
+        if(gridValue != pref.getInt(UNOSharedPreferences.GRID_SETTING,GridSetting.GRID1)){
+            Log.d("ㅁㄴㅇㄹ","여기");
+            gridValue = pref.getInt(UNOSharedPreferences.GRID_SETTING,GridSetting.GRID1);
+            gridSetting.setColumnRow(gridValue);
+            columnNumber = gridSetting.numColumn;
+            rowNumber = gridSetting.numRow;
+            resetAdapter();
+            Log.d("gridchange","여기");
+        }
     }
 
     private void setLayoutWeight() {
@@ -163,7 +216,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     }
 
-    private void resetAdapter(){
+    private void resetAdapter() {
+        maxAppNumPerPage = columnNumber * rowNumber;
+
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         createFragments(mode, getPackageManager().queryIntentActivities(intent, 0));
@@ -192,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPagerHeight = (int) (displayHeight * rate);
         Log.d("rate", rate + "");
         if (displayWidth >= displayHeight) {
-            iconSize = (int)(0.6 * viewPagerHeight / (rowNumber));
+            iconSize = (int) (0.6 * viewPagerHeight / (rowNumber));
             Log.d("display calculate", "displayWidth > displayHeight");
         } else {
             iconSize = viewPagerWidth / (columnNumber);

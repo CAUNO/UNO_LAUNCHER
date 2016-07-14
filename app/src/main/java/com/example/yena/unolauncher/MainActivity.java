@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private int columnNumber, rowNumber, maxAppNumPerPage, pageCount;
 
     private int gridValue;
+    private int selectedGrid;
 
     private int mode;
 
@@ -232,17 +233,39 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void gridChange() {
-        GridSetting gridSetting = new GridSetting(getApplicationContext(),gridValue);
-        gridSetting.gridSelectDialog(MainActivity.this);
-        if(gridValue != pref.getInt(UNOSharedPreferences.GRID_SETTING,GridSetting.GRID1)){
-            Log.d("ㅁㄴㅇㄹ","여기");
-            gridValue = pref.getInt(UNOSharedPreferences.GRID_SETTING,GridSetting.GRID1);
-            gridSetting.setColumnRow(gridValue);
-            columnNumber = gridSetting.numColumn;
-            rowNumber = gridSetting.numRow;
-            resetAdapter();
-            Log.d("gridchange","여기");
-        }
+        final String items[] = {getString(R.string.grid1), getString(R.string.grid2),
+                getString(R.string.grid3), getString(R.string.grid4)};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getString(R.string.grid_dialog_title));
+        builder.setSingleChoiceItems(items, 0,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        selectedGrid = whichButton;
+                    }
+                }).setPositiveButton(getString(R.string.confirm),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if(gridValue != selectedGrid){
+                            gridValue = selectedGrid;
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putInt(UNOSharedPreferences.GRID_SETTING, gridValue);
+                            editor.commit();
+                            GridSetting gridSetting = new GridSetting(getApplicationContext(),gridValue);
+                            gridSetting.setColumnRow(gridValue);
+                            columnNumber = gridSetting.numColumn;
+                            rowNumber = gridSetting.numRow;
+                            resetAdapter();
+                        }
+                        dialog.cancel();
+                    }
+                }).setNegativeButton(getString(R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                });
+        builder.show();
     }
 
     private void setLayoutWeight() {

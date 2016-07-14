@@ -26,6 +26,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,9 +88,20 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     mode = MAIN_MODE;
                     resetAdapter();
                 }
+                break;
         }
         return false;
     }
+
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
+            if (event.getAction() == KeyEvent.ACTION_UP){
+
+                ibDelete.performClick();
+                return true;
+            }}
+        return super.dispatchKeyEvent(event);
+    };
 
     @Override
     public void onPageScrollStateChanged(int state) {
@@ -189,6 +201,34 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 popupMenu.show();
             }
         });
+    }
+
+    private void popupMenu(View v){
+        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_item_delete:
+                        if (mode == MAIN_MODE) {
+                            mode = DELETE_MODE;
+                        } else if (mode == DELETE_MODE) {
+                            mode = MAIN_MODE;
+                        }
+                        resetAdapter();
+                        return true;
+                    case R.id.menu_item_background:
+
+                        return true;
+                    case R.id.menu_item_grid:
+                        gridChange();
+                        return true;
+                }
+                return false;
+            }
+        });
+        popupMenu.inflate(R.menu.popup_menu);
+        popupMenu.show();
     }
 
     private void gridChange() {

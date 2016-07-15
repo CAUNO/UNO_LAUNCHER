@@ -7,7 +7,7 @@
         android:visible="true"/>
     <item
         android:id="@+id/menu_item_background"
-        android:title="@string/change_background"
+        android:title="@string/change_theme"
         android:visible="true"/>
     <item
         android:id="@+id/menu_item_grid"

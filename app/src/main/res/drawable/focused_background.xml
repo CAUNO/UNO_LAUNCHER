@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="#5500aaff" />
+
+    <stroke
+        android:width="1dp"
+        android:color="#e041c9ff" />
+
+    <!-- Specify the margins that all content inside the drawable must adhere to -->
+    <!--<padding-->
+        <!--android:left="30dp"-->
+        <!--android:right="30dp"-->
+        <!--android:top="30dp"-->
+        <!--android:bottom="30dp" />-->
+</shape>

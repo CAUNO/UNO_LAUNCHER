@@ -9,7 +9,7 @@
     <string name="ok">Yes</string>
     <string name="no">No</string>
     <string name="delete_app">Uninstall App</string>
-    <string name="change_background">Change Theme</string>
+    <string name="change_theme">Change Theme</string>
     <string name="change_grid">Grid Size</string>
     <string name="grid1">8 x 4</string>
     <string name="grid2">4 x 3</string>

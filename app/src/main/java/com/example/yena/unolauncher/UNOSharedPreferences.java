@@ -7,5 +7,5 @@ public class UNOSharedPreferences {
 
     public static final String NAME = "UNOSharedPreferences";
     public static final String GRID_SETTING = "GridSetting";
-    public static final String BACKGROUND_SETTING = "BackgroundSetting";
+    public static final String THEME_SETTING = "ThemeSetting";
 }

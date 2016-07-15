@@ -8,7 +8,7 @@
     <string name="ok">네</string>
     <string name="no">아니오</string>
     <string name="delete_app">앱 삭제하기</string>
-    <string name="change_background">테마 바꾸기</string>
+    <string name="change_theme">테마 바꾸기</string>
     <string name="change_grid">그리드 크기</string>
     <string name="grid1">8 x 4</string>
     <string name="grid2">4 x 3</string>

@@ -25,6 +25,7 @@ import android.widget.PopupMenu;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.security.Key;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private LinearLayout llMain;
     private RelativeLayout rlTitle;
     private LinearLayout llPageIndicator;
-    private ImageButton ibDelete;
+    private ToggleButton tbMenu;
     private List<AppListFragment> fragments = new ArrayList<AppListFragment>();
 
     private int dotsCount;
@@ -66,17 +67,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private int mode;
 
     private List<ResolveInfo> pkgAppsList = new ArrayList<>();
-    LinearLayout ll;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        ll = (LinearLayout) findViewById(R.id.ll_main);
 
         init();
     }
@@ -104,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         if (event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
             if (event.getAction() == KeyEvent.ACTION_UP){
 
-                ibDelete.performClick();
+                tbMenu.performClick();
                 return true;
             }}
         return super.dispatchKeyEvent(event);
@@ -157,6 +153,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         pref = this.getSharedPreferences(UNOSharedPreferences.NAME, 0);
         gridValue = pref.getInt(UNOSharedPreferences.GRID_SETTING, GridSetting.GRID1);
+        themeValue = pref.getInt(UNOSharedPreferences.THEME_SETTING,ThemeSetting.THEME1);
 
         GridSetting gridSetting = new GridSetting(getApplicationContext(),gridValue);
         columnNumber = gridSetting.numColumn;
@@ -168,16 +165,17 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         rlTitle = (RelativeLayout) findViewById(R.id.rl_title);
         viewPager = (ViewPager) findViewById(R.id.vp_main);
         llPageIndicator = (LinearLayout) findViewById(R.id.ll_count_dots);
-        ibDelete = (ImageButton) findViewById(R.id.ib_delete);
+        tbMenu = (ToggleButton)findViewById(R.id.tb_menu);
 
         viewPager.addOnPageChangeListener(this);
 
         setLayoutWeight();
         setListener();
+        setTheme();
     }
 
     private void setListener() {
-        ibDelete.setOnClickListener(new View.OnClickListener() {
+        tbMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
@@ -208,34 +206,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 popupMenu.show();
             }
         });
-    }
-
-    private void popupMenu(View v){
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_item_delete:
-                        if (mode == MAIN_MODE) {
-                            mode = DELETE_MODE;
-                        } else if (mode == DELETE_MODE) {
-                            mode = MAIN_MODE;
-                        }
-                        resetAdapter();
-                        return true;
-                    case R.id.menu_item_background:
-
-                        return true;
-                    case R.id.menu_item_grid:
-                        gridChange();
-                        return true;
-                }
-                return false;
-            }
-        });
-        popupMenu.inflate(R.menu.popup_menu);
-        popupMenu.show();
     }
 
     private void gridChange() {
@@ -291,23 +261,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         if(themeValue != selectedTheme){
                             themeValue = selectedTheme;
                             SharedPreferences.Editor editor = pref.edit();
-                            editor.putInt(UNOSharedPreferences.BACKGROUND_SETTING, themeValue);
+                            editor.putInt(UNOSharedPreferences.THEME_SETTING, themeValue);
                             editor.commit();
-
-                            switch (themeValue) {
-                                case 0:
-                                    ll.setBackgroundResource(R.drawable.orange);
-                                    break;
-                                case 1:
-                                    ll.setBackgroundResource(R.drawable.pink);
-                                    break;
-                                case 2:
-                                    ll.setBackgroundResource(R.drawable.grapefruit);
-                                    break;
-                                default:
-                                    ll.setBackgroundResource(R.drawable.orange);
-                            }
-                            resetAdapter();
+                            setTheme();
                         }
                         dialog.cancel();
                     }
@@ -318,6 +274,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     }
                 });
         builder.show();
+    }
+
+    private void setTheme(){
+        ThemeSetting themeSetting = new ThemeSetting(getApplicationContext());
+        llMain.setBackgroundResource(themeSetting.getThemeResource(themeValue));
     }
 
     private void setLayoutWeight() {

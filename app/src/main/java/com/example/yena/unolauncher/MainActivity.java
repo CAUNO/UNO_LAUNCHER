@@ -60,17 +60,23 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private int viewPagerWidth, viewPagerHeight;
     private int columnNumber, rowNumber, maxAppNumPerPage, pageCount;
 
-    private int gridValue;
-    private int selectedGrid;
+    private int gridValue, themeValue;
+    private int selectedGrid, selectedTheme;
 
     private int mode;
 
     private List<ResolveInfo> pkgAppsList = new ArrayList<>();
+    LinearLayout ll;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+        ll = (LinearLayout) findViewById(R.id.ll_main);
 
         init();
     }
@@ -188,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                                 resetAdapter();
                                 return true;
                             case R.id.menu_item_background:
-
+                                themeChange();
                                 return true;
                             case R.id.menu_item_grid:
                                 gridChange();
@@ -255,6 +261,52 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                             gridSetting.setColumnRow(gridValue);
                             columnNumber = gridSetting.numColumn;
                             rowNumber = gridSetting.numRow;
+                            resetAdapter();
+                        }
+                        dialog.cancel();
+                    }
+                }).setNegativeButton(getString(R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                });
+        builder.show();
+    }
+
+    private void themeChange() {
+        final String items[] = {getString(R.string.theme1), getString(R.string.theme2),
+                getString(R.string.theme3)};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getString(R.string.theme_dialog_title));
+        builder.setSingleChoiceItems(items, 0,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        selectedTheme = whichButton;
+                    }
+                }).setPositiveButton(getString(R.string.confirm),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if(themeValue != selectedTheme){
+                            themeValue = selectedTheme;
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putInt(UNOSharedPreferences.BACKGROUND_SETTING, themeValue);
+                            editor.commit();
+
+                            switch (themeValue) {
+                                case 0:
+                                    ll.setBackgroundResource(R.drawable.orange);
+                                    break;
+                                case 1:
+                                    ll.setBackgroundResource(R.drawable.pink);
+                                    break;
+                                case 2:
+                                    ll.setBackgroundResource(R.drawable.grapefruit);
+                                    break;
+                                default:
+                                    ll.setBackgroundResource(R.drawable.orange);
+                            }
                             resetAdapter();
                         }
                         dialog.cancel();

@@ -16,5 +16,9 @@
     <string name="grid3">10 x 4</string>
     <string name="grid4">5 x 4</string>
     <string name="grid_dialog_title">Grid Size</string>
+    <string name="theme1">Orange</string>
+    <string name="theme2">Pink</string>
+    <string name="theme3">Grapefruit</string>
+    <string name="theme_dialog_title">Theme</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

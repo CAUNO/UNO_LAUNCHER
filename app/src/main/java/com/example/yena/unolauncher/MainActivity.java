@@ -29,11 +29,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
-//    private static final int TABLET_COLUMN_NUMBER = 8;
-//    private static final int PHONE_COLUMN_NUMBER = 4;
-//    private static final int TABLET_ROW_NUMBER = 4;
-//    private static final int PHONE_ROW_NUMBER = 5;
-
     private static final int LAYOUT_TITLE_WEIGHT = 1;
     private static final int LAYOUT_VIEWPAGER_WEIGHT = 8;
     private static final int LAYOUT_DOTS_WEIGHT = 1;
@@ -298,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         llMain.setWeightSum(LAYOUT_TITLE_WEIGHT + LAYOUT_VIEWPAGER_WEIGHT + LAYOUT_DOTS_WEIGHT);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_TITLE_WEIGHT);
-        layoutParams.setMargins((int) (0.05 * displayWidth), 0, (int) (0.05 * displayWidth), 0);
+        layoutParams.setMargins((int) (0.02 * displayWidth), 0, (int) (0.02 * displayWidth), 0);
         rlTitle.setLayoutParams(layoutParams);
         viewPager.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_VIEWPAGER_WEIGHT));
         llPageIndicator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_DOTS_WEIGHT));
@@ -331,14 +326,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void calculateSize() {
-//        if (isTablet()) {
-//            columnNumber = TABLET_COLUMN_NUMBER;
-//            rowNumber = TABLET_ROW_NUMBER;
-//        } else {
-//            columnNumber = PHONE_COLUMN_NUMBER;
-//            rowNumber = PHONE_ROW_NUMBER;
-//        }
-
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         displayHeight = displaymetrics.heightPixels / (int) getResources().getDisplayMetrics().density;
@@ -348,7 +335,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPagerWidth = displayWidth;
         viewPagerHeight = (int) (displayHeight * rate);
         Log.d("rate", rate + "");
-
         Log.d("displayWidth", displayWidth + "");
         Log.d("displayHeight", displayHeight + "");
         Log.d("columnNumber", columnNumber + "");
@@ -364,21 +350,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private boolean isSystemPackage(ResolveInfo resolveInfo) {
         return ((resolveInfo.activityInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
-    }
-
-    private boolean isTablet() {
-        int portrait_width_pixel = Math.min(this.getResources().getDisplayMetrics().widthPixels, this.getResources().getDisplayMetrics().heightPixels);
-        int dots_per_virtual_inch = this.getResources().getDisplayMetrics().densityDpi;
-        float virutal_width_inch = portrait_width_pixel / dots_per_virtual_inch;
-        if (virutal_width_inch <= 2) {
-            //is phone
-            Log.d("Device", "Phone");
-            return false;
-        } else {
-            //is tablet
-            Log.d("Device", "Tablet");
-            return true;
-        }
     }
 
     private void createFragments(int mode, List<ResolveInfo> allPkgAppsList) {

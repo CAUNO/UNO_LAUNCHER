@@ -12,9 +12,12 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -26,10 +29,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
-    private static final int TABLET_COLUMN_NUMBER = 8;
-    private static final int PHONE_COLUMN_NUMBER = 4;
-    private static final int TABLET_ROW_NUMBER = 4;
-    private static final int PHONE_ROW_NUMBER = 5;
+//    private static final int TABLET_COLUMN_NUMBER = 8;
+//    private static final int PHONE_COLUMN_NUMBER = 4;
+//    private static final int TABLET_ROW_NUMBER = 4;
+//    private static final int PHONE_ROW_NUMBER = 5;
 
     private static final int LAYOUT_TITLE_WEIGHT = 1;
     private static final int LAYOUT_VIEWPAGER_WEIGHT = 8;
@@ -161,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         viewPager.addOnPageChangeListener(this);
 
+        setIconSize();
         setLayoutWeight();
         setListener();
         setTheme();
@@ -203,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void gridChange() {
         final String items[] = {getString(R.string.grid1), getString(R.string.grid2),
                 getString(R.string.grid3), getString(R.string.grid4)};
+        selectedGrid = 0;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle(getString(R.string.grid_dialog_title));
@@ -223,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                             gridSetting.setColumnRow(gridValue);
                             columnNumber = gridSetting.numColumn;
                             rowNumber = gridSetting.numRow;
+                            setIconSize();
                             resetAdapter();
                         }
                         dialog.cancel();
@@ -294,16 +300,29 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         pagerAdapter = new AppListPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(pagerAdapter);
         setUIPageViewController();
+
+        Animation animation = AnimationUtils.loadAnimation(this,R.anim.fade);
+        llMain.startAnimation(animation);
+    }
+
+    private void setIconSize(){
+        if (displayWidth >= displayHeight) {
+            iconSize = (int) (0.6 * viewPagerHeight / (rowNumber));
+            Log.d("display calculate", "displayWidth > displayHeight");
+        } else {
+            iconSize = viewPagerWidth / (columnNumber);
+            Log.d("display calculate", "displayHeight > displayWidth");
+        }
     }
 
     private void calculateSize() {
-        if (isTablet()) {
-            columnNumber = TABLET_COLUMN_NUMBER;
-            rowNumber = TABLET_ROW_NUMBER;
-        } else {
-            columnNumber = PHONE_COLUMN_NUMBER;
-            rowNumber = PHONE_ROW_NUMBER;
-        }
+//        if (isTablet()) {
+//            columnNumber = TABLET_COLUMN_NUMBER;
+//            rowNumber = TABLET_ROW_NUMBER;
+//        } else {
+//            columnNumber = PHONE_COLUMN_NUMBER;
+//            rowNumber = PHONE_ROW_NUMBER;
+//        }
 
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -314,13 +333,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPagerWidth = displayWidth;
         viewPagerHeight = (int) (displayHeight * rate);
         Log.d("rate", rate + "");
-        if (displayWidth >= displayHeight) {
-            iconSize = (int) (0.6 * viewPagerHeight / (rowNumber));
-            Log.d("display calculate", "displayWidth > displayHeight");
-        } else {
-            iconSize = viewPagerWidth / (columnNumber);
-            Log.d("display calculate", "displayHeight > displayWidth");
-        }
+
         Log.d("displayWidth", displayWidth + "");
         Log.d("displayHeight", displayHeight + "");
         Log.d("columnNumber", columnNumber + "");

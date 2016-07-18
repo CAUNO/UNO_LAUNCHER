@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private static final int LAYOUT_DOTS_WEIGHT = 1;
 
     private static final int MAIN_MODE = 0, DELETE_MODE = 1;
+    public static final int IS_IN_FOREGROUND = 0, IS_IN_BACKGROUND = 1;
 
     private SharedPreferences pref;
 
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private int selectedGrid, selectedTheme;
 
     private int mode;
+    private boolean isInForeground;
 
     private List<ResolveInfo> pkgAppsList = new ArrayList<>();
 
@@ -73,6 +75,19 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onResume() {
         super.onResume();
         resetAdapter();
+        isInForeground = true;
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(UNOSharedPreferences.IS_FOREGROUND,isInForeground());
+        editor.commit();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isInForeground = false;
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(UNOSharedPreferences.IS_FOREGROUND,isInForeground());
+        editor.commit();
     }
 
     @Override
@@ -324,6 +339,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         Log.d("displayWidth", displayWidth + "");
         Log.d("displayHeight", displayHeight + "");
         Log.d("columnNumber", columnNumber + "");
+    }
+
+    private int isInForeground(){
+        if(isInForeground){
+            return IS_IN_FOREGROUND;
+        } else{
+            return IS_IN_BACKGROUND;
+        }
     }
 
     private boolean isSystemPackage(ResolveInfo resolveInfo) {

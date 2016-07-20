@@ -16,8 +16,8 @@
     <string name="grid4">5 x 4</string>
     <string name="grid_dialog_title">그리드 선택</string>
     <string name="theme1">오렌지</string>
-    <string name="theme2">핑크</string>
-    <string name="theme3">자몽</string>
+    <string name="theme2">블루</string>
+    <string name="theme3">네이비</string>
     <string name="theme_dialog_title">테마 선택</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

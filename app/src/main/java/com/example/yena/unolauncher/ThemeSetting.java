@@ -25,9 +25,9 @@ public class ThemeSetting {
             case THEME1 :
                 return R.drawable.orange;
             case THEME2 :
-                return R.drawable.pink;
+                return R.drawable.blue;
             case THEME3 :
-                return R.drawable.grapefruit;
+                return R.drawable.navy;
             default:
                 return R.drawable.orange;
         }

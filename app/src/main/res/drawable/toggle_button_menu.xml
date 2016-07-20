@@ -3,5 +3,6 @@
     <!--<item android:state_focused="false" android:drawable="@android:drawable/star_off"/>-->
     <item android:state_focused="true" android:drawable="@drawable/menu_icon_with_background" />
     <!--<item android:state_selected="false" android:drawable="@android:drawable/star_off"/>-->
-    <item android:drawable="@android:drawable/star_off"/>
+    <item android:drawable="@drawable/menu"/>
+
     </selector>

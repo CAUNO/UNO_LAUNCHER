@@ -255,6 +255,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void themeChange() {
         final String items[] = {getString(R.string.theme1), getString(R.string.theme2),
                 getString(R.string.theme3)};
+        selectedTheme = 0;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle(getString(R.string.theme_dialog_title));

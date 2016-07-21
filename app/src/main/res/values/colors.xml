@@ -7,4 +7,5 @@
     <color name="white">#FFFFFF</color>
     <color name="button_not_selected">#ffffff</color>
     <color name="button_selected">#2c3d9e</color>
+    <color name="transparent_white">#a4ffffff</color>
 </resources>

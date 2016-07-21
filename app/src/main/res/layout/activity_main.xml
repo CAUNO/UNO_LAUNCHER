@@ -26,20 +26,10 @@
             android:layout_height="wrap_content"
             android:id="@+id/tb_menu"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
             android:background="@drawable/toggle_button_menu"
             android:textOff=""
             android:textOn=""/>
-
-        <!--<ImageButton-->
-            <!--android:id="@+id/ib_delete"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@android:drawable/ic_delete"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_alignParentRight="true"/>-->
-
-
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager

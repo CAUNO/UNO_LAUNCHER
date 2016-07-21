@@ -1,26 +1,36 @@
 package com.example.yena.unolauncher;
 
+import android.app.ActionBar;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ToggleButton;
 
@@ -75,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         resetAdapter();
         isInForeground = true;
         SharedPreferences.Editor editor = pref.edit();
-        editor.putInt(UNOSharedPreferences.IS_FOREGROUND,isInForeground());
+        editor.putInt(UNOSharedPreferences.IS_FOREGROUND, isInForeground());
         editor.commit();
     }
 
@@ -184,32 +194,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         tbMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.menu_item_delete:
-                                if (mode == MAIN_MODE) {
-                                    mode = DELETE_MODE;
-                                } else if (mode == DELETE_MODE) {
-                                    mode = MAIN_MODE;
-                                }
-                                resetAdapter();
-                                return true;
-                            case R.id.menu_item_background:
-                                themeChange();
-                                return true;
-                            case R.id.menu_item_grid:
-                                gridChange();
-                                return true;
-                        }
-                        return false;
-                    }
-                });
-
-                popupMenu.inflate(R.menu.popup_menu);
-                popupMenu.show();
+                showMenuDialog();
             }
         });
     }
@@ -288,6 +273,52 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void setTheme(){
         ThemeSetting themeSetting = new ThemeSetting(getApplicationContext());
         llMain.setBackgroundResource(themeSetting.getThemeResource(themeValue));
+    }
+
+    private void showMenuDialog(){
+        Dialog dialog = new Dialog(MainActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawableResource(R.color.transparent_white);
+        dialog.setContentView(R.layout.dialog_menu);
+
+        ImageButton ibDelete = (ImageButton)dialog.findViewById(R.id.ib_menu_delete);
+        ImageButton ibTheme = (ImageButton)dialog.findViewById(R.id.ib_menu_background);
+        ImageButton ibGrid = (ImageButton)dialog.findViewById(R.id.ib_menu_grid);
+
+        ibDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mode == MAIN_MODE) {
+                    mode = DELETE_MODE;
+                } else if (mode == DELETE_MODE) {
+                    mode = MAIN_MODE;
+                }
+                resetAdapter();
+            }
+        });
+
+        ibTheme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                themeChange();
+            }
+        });
+
+        ibGrid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gridChange();
+            }
+        });
+
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        params.width = (int)(displayWidth / 6);
+        params.height = (int)((params.width / 3) *1.2);
+        params.x = rlTitle.getLeft();
+        params.y = rlTitle.getHeight();
+        params.gravity = Gravity.TOP | Gravity.LEFT;
+        dialog.getWindow().setAttributes(params);
+        dialog.show();
     }
 
     private void setLayoutWeight() {

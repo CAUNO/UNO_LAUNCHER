@@ -17,7 +17,6 @@ public class GlobalKeyReceiver extends BroadcastReceiver {
 		if (intent.getAction().equals("android.intent.action.GLOBAL_BUTTON")) {
 			KeyEvent key = (KeyEvent)intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
 			if (key.getAction() == KeyEvent.ACTION_UP) {
-				Log.d("keyevent","키는들어왓지만들어오진않았따");
 				int keycode = key.getKeyCode();
 				if (keycode == KeyEvent.KEYCODE_PERIOD) {
 					SharedPreferences pref = context.getSharedPreferences(UNOSharedPreferences.NAME, 0);

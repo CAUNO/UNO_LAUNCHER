@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void showMenuDialog(){
-        Dialog dialog = new Dialog(MainActivity.this);
+        final Dialog dialog = new Dialog(MainActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawableResource(R.color.transparent_white);
         dialog.setContentView(R.layout.dialog_menu);
@@ -288,11 +288,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (mode == MAIN_MODE) {
                     mode = DELETE_MODE;
                 } else if (mode == DELETE_MODE) {
                     mode = MAIN_MODE;
                 }
+                dialog.dismiss();
                 resetAdapter();
             }
         });
@@ -300,6 +302,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         ibTheme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 themeChange();
             }
         });
@@ -307,6 +310,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         ibGrid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 gridChange();
             }
         });

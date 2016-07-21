@@ -314,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
         params.width = (int)(displayWidth / 6);
         params.height = (int)((params.width / 3) *1.2);
-        params.x = rlTitle.getLeft();
+        params.x = tbMenu.getLeft();
         params.y = rlTitle.getHeight();
         params.gravity = Gravity.TOP | Gravity.LEFT;
         dialog.getWindow().setAttributes(params);
@@ -325,8 +325,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         llMain.setWeightSum(LAYOUT_TITLE_WEIGHT + LAYOUT_VIEWPAGER_WEIGHT + LAYOUT_DOTS_WEIGHT);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_TITLE_WEIGHT);
-        layoutParams.setMargins((int) (0.02 * displayWidth), 0, (int) (0.02 * displayWidth), 0);
+//        layoutParams.setMargins((int) (0.02 * displayWidth), 0, (int) (0.02 * displayWidth), 0);
         rlTitle.setLayoutParams(layoutParams);
+        ViewGroup.MarginLayoutParams menuMarginParams = new ViewGroup.MarginLayoutParams(tbMenu.getLayoutParams());
+        menuMarginParams.setMargins((int)(0.02*displayWidth), 0, 0, 0);
+        tbMenu.setLayoutParams(new RelativeLayout.LayoutParams(menuMarginParams));
         viewPager.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_VIEWPAGER_WEIGHT));
         llPageIndicator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_DOTS_WEIGHT));
 

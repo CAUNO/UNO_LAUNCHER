@@ -15,15 +15,21 @@
         android:background="@drawable/title">
 
 
-        <ToggleButton
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tb_menu"
+            android:id="@+id/fl_menu"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/toggle_button_menu"
             android:textOff=""
-            android:textOn=""/>
+            android:textOn="">
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/ib_menu"
+                android:background="@drawable/toggle_button_menu"/>
+            </FrameLayout>
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager

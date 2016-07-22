@@ -1,14 +1,11 @@
 package com.example.yena.unolauncher;
 
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v4.view.ViewPager;
 import android.
 
@@ -19,8 +16,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -31,10 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private LinearLayout llMain;
     private RelativeLayout rlTitle;
     private LinearLayout llPageIndicator;
-    private ToggleButton tbMenu;
+    private FrameLayout flMenu;
+    private ImageButton ibMenu;
     private List<AppListFragment> fragments = new ArrayList<AppListFragment>();
 
     private int dotsCount;
@@ -115,9 +108,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
+            if(mode == DELETE_MODE){
+                mode = MAIN_MODE;
+                resetAdapter();
+            }
             if (event.getAction() == KeyEvent.ACTION_UP){
-
-                tbMenu.performClick();
+                ibMenu.performClick();
                 return true;
             }}
         return super.dispatchKeyEvent(event);
@@ -182,7 +178,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         rlTitle = (RelativeLayout) findViewById(R.id.rl_title);
         viewPager = (ViewPager) findViewById(R.id.vp_main);
         llPageIndicator = (LinearLayout) findViewById(R.id.ll_count_dots);
-        tbMenu = (ToggleButton)findViewById(R.id.tb_menu);
+        flMenu = (FrameLayout)findViewById(R.id.fl_menu);
+        ibMenu = (ImageButton)findViewById(R.id.ib_menu);
 
         viewPager.addOnPageChangeListener(this);
 
@@ -193,9 +190,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
     private void setListener() {
-        tbMenu.setOnClickListener(new View.OnClickListener() {
+        ibMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mode == DELETE_MODE){
+                    mode = MAIN_MODE;
+                    resetAdapter();
+                }
                 showMenuDialog();
             }
         });
@@ -320,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
         params.width = (int)(displayWidth / 6);
         params.height = (int)((params.width / 3) *1.2);
-        params.x = tbMenu.getLeft();
+        params.x = flMenu.getLeft();
         params.y = rlTitle.getHeight();
         params.gravity = Gravity.TOP | Gravity.LEFT;
         dialog.getWindow().setAttributes(params);
@@ -331,11 +332,20 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         llMain.setWeightSum(LAYOUT_TITLE_WEIGHT + LAYOUT_VIEWPAGER_WEIGHT + LAYOUT_DOTS_WEIGHT);
 
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_TITLE_WEIGHT);
-//        layoutParams.setMargins((int) (0.02 * displayWidth), 0, (int) (0.02 * displayWidth), 0);
         rlTitle.setLayoutParams(layoutParams);
-        ViewGroup.MarginLayoutParams menuMarginParams = new ViewGroup.MarginLayoutParams(tbMenu.getLayoutParams());
+
+        ViewGroup.MarginLayoutParams menuMarginParams = new ViewGroup.MarginLayoutParams(flMenu.getLayoutParams());
         menuMarginParams.setMargins((int)(0.02*displayWidth), 0, 0, 0);
-        tbMenu.setLayoutParams(new RelativeLayout.LayoutParams(menuMarginParams));
+        flMenu.setLayoutParams(new RelativeLayout.LayoutParams(menuMarginParams));
+
+        ViewGroup.LayoutParams flLayoutParams = flMenu.getLayoutParams();
+        flLayoutParams.width = (int)(displayHeight * LAYOUT_TITLE_WEIGHT / (LAYOUT_TITLE_WEIGHT + LAYOUT_VIEWPAGER_WEIGHT + LAYOUT_DOTS_WEIGHT));
+        flLayoutParams.height = flLayoutParams.width;
+        flMenu.setLayoutParams(flLayoutParams);
+
+        int menuPadding = flLayoutParams.width / 10;
+        flMenu.setPadding(menuPadding,menuPadding,menuPadding,menuPadding);
+
         viewPager.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_VIEWPAGER_WEIGHT));
         llPageIndicator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_DOTS_WEIGHT));
 

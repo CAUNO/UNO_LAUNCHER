@@ -3,6 +3,7 @@ package com.example.yena.unolauncher;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -33,6 +34,7 @@ public class AppListFragment extends Fragment {
     private int viewPagerHeight;
     private boolean deleteBadgeViewVisibility;
     private GridView gridView;
+    private SharedPreferences pref;
 
     public AppListFragment() {
 

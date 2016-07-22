@@ -231,11 +231,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         }
                         dialog.cancel();
                     }
-                }).setNegativeButton(getString(R.string.cancel),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.cancel();
-                    }
                 });
         builder.show();
     }
@@ -264,11 +259,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         }
                         dialog.cancel();
                     }
-                }).setNegativeButton(getString(R.string.cancel),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        dialog.cancel();
-                    }
                 });
         builder.show();
     }
@@ -276,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void setTheme(){
         ThemeSetting themeSetting = new ThemeSetting(getApplicationContext());
         llMain.setBackgroundResource(themeSetting.getThemeResource(themeValue));
+
     }
 
     private void showMenuDialog(){

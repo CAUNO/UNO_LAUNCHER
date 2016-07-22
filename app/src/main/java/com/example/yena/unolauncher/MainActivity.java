@@ -33,9 +33,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
-    private static final int LAYOUT_TITLE_WEIGHT = 4;
+    private static final int LAYOUT_TITLE_WEIGHT = 3;
     private static final int LAYOUT_VIEWPAGER_WEIGHT = 42;
-    private static final int LAYOUT_DOTS_WEIGHT = 4;
+    private static final int LAYOUT_DOTS_WEIGHT = 3;
 
     private static final int MAIN_MODE = 0, DELETE_MODE = 1;
     public static final int IS_IN_FOREGROUND = 0, IS_IN_BACKGROUND = 1;

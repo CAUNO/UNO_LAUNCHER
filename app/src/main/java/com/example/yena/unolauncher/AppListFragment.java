@@ -152,16 +152,13 @@ public class AppListFragment extends Fragment {
 
             if (convertView == null) {
                 view = inflater.inflate(R.layout.item, parent, false);
-//                Log.d("AppListFragment", "convertView is null");
             } else {
                 view = convertView;
             }
-            RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.ll_item);
+            RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.rl_item);
             ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) relativeLayout.getLayoutParams();
             lp.width = (int) (viewPagerWidth / columnNumber);
             lp.height = (int) (HEIGHT_RATE * viewPagerHeight / rowNumber);
-//            Log.d("lp","width : "+lp.width);
-//            Log.d("lp","height : "+lp.height);
             relativeLayout.setLayoutParams(lp);
 
             ImageView imageView = (ImageView) view.findViewById(R.id.iv_item);

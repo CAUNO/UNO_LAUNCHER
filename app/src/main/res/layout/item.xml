@@ -3,11 +3,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/ll_item">
+    android:id="@+id/rl_item">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -26,6 +23,5 @@
             android:layout_alignParentBottom="true"
             android:id="@+id/tv_item"
             android:textColor="@color/white"/>
-    </RelativeLayout>
 
 </RelativeLayout>

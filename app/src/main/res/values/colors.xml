@@ -8,4 +8,10 @@
     <color name="button_not_selected">#ffffff</color>
     <color name="button_selected">#2c3d9e</color>
     <color name="transparent_white">#a4ffffff</color>
+    <color name="dot_selected1">#00B26A</color>
+    <color name="dot_selected2">#B27800</color>
+    <color name="dot_selected3">#8F003C</color>
+    <color name="dot_non_selected1">#1cffa2</color>
+    <color name="dot_non_selected2">#FFB51C</color>
+    <color name="dot_non_selected3">#DB0A62</color>
 </resources>

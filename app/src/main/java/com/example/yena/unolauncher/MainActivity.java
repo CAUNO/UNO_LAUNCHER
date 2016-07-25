@@ -8,9 +8,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
-import android.
-
-        support.v7.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -54,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private int dotsCount;
     private ImageView[] dots;
+    private int nonSelectedDotResource;
+    private int selectedDotResource;
 
     private int displayWidth, displayHeight, iconSize;
     private int viewPagerWidth, viewPagerHeight;
@@ -128,10 +128,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     public void onPageSelected(int position) {
         for (int i = 0; i < dotsCount; i++) {
-            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.non_selected_item_dot));
+            dots[i].setImageDrawable(getResources().getDrawable(nonSelectedDotResource));
         }
 
-        dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selected_item_dot));
+        dots[position].setImageDrawable(getResources().getDrawable(selectedDotResource));
     }
 
     @Override
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         for (int i = 0; i < dotsCount; i++) {
             dots[i] = new ImageView(this);
-            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.non_selected_item_dot));
+            dots[i].setImageDrawable(getResources().getDrawable(nonSelectedDotResource));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -154,11 +154,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             );
 
             params.setMargins((int) (0.01 * displayWidth), 0, (int) (0.01 * displayWidth), 0);
-
             llPageIndicator.addView(dots[i], params);
         }
 
-        dots[0].setImageDrawable(getResources().getDrawable(R.drawable.selected_item_dot));
+        dots[0].setImageDrawable(getResources().getDrawable(selectedDotResource));
     }
 
     private void init() {
@@ -219,12 +218,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 }).setPositiveButton(getString(R.string.confirm),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if(gridValue != selectedGrid){
+                        if (gridValue != selectedGrid) {
                             gridValue = selectedGrid;
                             SharedPreferences.Editor editor = pref.edit();
                             editor.putInt(UNOSharedPreferences.GRID_SETTING, gridValue);
                             editor.commit();
-                            GridSetting gridSetting = new GridSetting(getApplicationContext(),gridValue);
+                            GridSetting gridSetting = new GridSetting(getApplicationContext(), gridValue);
                             gridSetting.setColumnRow(gridValue);
                             columnNumber = gridSetting.numColumn;
                             rowNumber = gridSetting.numRow;
@@ -252,12 +251,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 }).setPositiveButton(getString(R.string.confirm),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if(themeValue != selectedTheme){
+                        if (themeValue != selectedTheme) {
                             themeValue = selectedTheme;
                             SharedPreferences.Editor editor = pref.edit();
                             editor.putInt(UNOSharedPreferences.THEME_SETTING, themeValue);
                             editor.commit();
                             setTheme();
+                            resetAdapter();
                         }
                         dialog.cancel();
                     }
@@ -268,7 +268,24 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void setTheme(){
         ThemeSetting themeSetting = new ThemeSetting(getApplicationContext());
         llMain.setBackgroundResource(themeSetting.getThemeResource(themeValue));
+        setDotResource();
+    }
 
+    private void setDotResource(){
+        switch (themeValue){
+            case ThemeSetting.THEME1 :
+                nonSelectedDotResource = R.drawable.dot_non_selected1;
+                selectedDotResource = R.drawable.dot_selected1;
+                break;
+            case ThemeSetting.THEME2 :
+                nonSelectedDotResource = R.drawable.dot_non_selected2;
+                selectedDotResource = R.drawable.dot_selected2;
+                break;
+            case ThemeSetting.THEME3 :
+                nonSelectedDotResource = R.drawable.dot_non_selected3;
+                selectedDotResource = R.drawable.dot_selected3;
+                break;
+        }
     }
 
     private void showMenuDialog(){

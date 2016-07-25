@@ -11,8 +11,11 @@
         android:id="@+id/ib_menu_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         android:layout_gravity="center"
-        android:background="@drawable/button_delete"
+        android:scaleType="centerInside"
+        android:src="@drawable/menu_image_delete"
+        android:background="@drawable/state_focused_background"
         android:layout_weight="1"/>
 
 
@@ -20,16 +23,22 @@
         android:id="@+id/ib_menu_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         android:layout_gravity="center"
-        android:background="@drawable/button_theme"
+        android:scaleType="centerInside"
+        android:src="@drawable/menu_image_theme"
+        android:background="@drawable/state_focused_background"
         android:layout_weight="1"/>
 
     <ImageButton
         android:id="@+id/ib_menu_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         android:layout_gravity="center"
-        android:background="@drawable/button_grid"
+        android:scaleType="centerInside"
+        android:src="@drawable/menu_image_grid"
+        android:background="@drawable/state_focused_background"
         android:layout_weight="1"/>
 
 

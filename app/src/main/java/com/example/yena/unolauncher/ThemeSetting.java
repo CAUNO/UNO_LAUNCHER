@@ -1,7 +1,6 @@
 package com.example.yena.unolauncher;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 
 /**
  * Created by yena on 2016-07-15.
@@ -23,13 +22,13 @@ public class ThemeSetting {
     int getThemeResource(int themeValue){
         switch (themeValue){
             case THEME1 :
-                return R.drawable.orange;
+                return R.drawable.theme_orange;
             case THEME2 :
-                return R.drawable.blue;
+                return R.drawable.theme_blue;
             case THEME3 :
-                return R.drawable.green;
+                return R.drawable.theme_green;
             default:
-                return R.drawable.orange;
+                return R.drawable.theme_orange;
         }
     }
 }

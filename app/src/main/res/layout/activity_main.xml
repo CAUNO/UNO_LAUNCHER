@@ -12,21 +12,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/fl_menu"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:textOff=""
-            android:textOn="">
+        <!--<FrameLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/fl_menu"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:textOff=""-->
+            <!--android:textOn="">-->
 
             <ImageButton
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
                 android:id="@+id/ib_menu"
-                android:background="@drawable/toggle_button_menu"/>
-            </FrameLayout>
+                android:src="@drawable/menu"
+                android:background="@drawable/state_focused_background"/>
+            <!--</FrameLayout>-->
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager

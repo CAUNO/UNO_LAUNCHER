@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,12 +20,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private LinearLayout llMain;
     private RelativeLayout rlTitle;
     private LinearLayout llPageIndicator;
-    private FrameLayout flMenu;
+//    private FrameLayout flMenu;
     private ImageButton ibMenu;
     private List<AppListFragment> fragments = new ArrayList<AppListFragment>();
 
@@ -118,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 return true;
             }}
         return super.dispatchKeyEvent(event);
-    };
+    }
 
     @Override
     public void onPageScrollStateChanged(int state) {
@@ -178,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         rlTitle = (RelativeLayout) findViewById(R.id.rl_title);
         viewPager = (ViewPager) findViewById(R.id.vp_main);
         llPageIndicator = (LinearLayout) findViewById(R.id.ll_count_dots);
-        flMenu = (FrameLayout)findViewById(R.id.fl_menu);
+//        flMenu = (FrameLayout)findViewById(R.id.fl_menu);
         ibMenu = (ImageButton)findViewById(R.id.ib_menu);
 
         viewPager.addOnPageChangeListener(this);
@@ -331,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
         params.width = (int)(displayWidth / 6);
         params.height = (int)((params.width / 3) *1.2);
-        params.x = flMenu.getLeft();
+        params.x = ibMenu.getLeft();
         params.y = rlTitle.getHeight();
         params.gravity = Gravity.TOP | Gravity.LEFT;
         dialog.getWindow().setAttributes(params);
@@ -344,17 +341,17 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_TITLE_WEIGHT);
         rlTitle.setLayoutParams(layoutParams);
 
-        ViewGroup.MarginLayoutParams menuMarginParams = new ViewGroup.MarginLayoutParams(flMenu.getLayoutParams());
+        ViewGroup.MarginLayoutParams menuMarginParams = new ViewGroup.MarginLayoutParams(ibMenu.getLayoutParams());
         menuMarginParams.setMargins((int)(0.02*displayWidth), 0, 0, 0);
-        flMenu.setLayoutParams(new RelativeLayout.LayoutParams(menuMarginParams));
+        ibMenu.setLayoutParams(new RelativeLayout.LayoutParams(menuMarginParams));
 
-        ViewGroup.LayoutParams flLayoutParams = flMenu.getLayoutParams();
+        ViewGroup.LayoutParams flLayoutParams = ibMenu.getLayoutParams();
         flLayoutParams.width = (int)(displayHeight * LAYOUT_TITLE_WEIGHT / (LAYOUT_TITLE_WEIGHT + LAYOUT_VIEWPAGER_WEIGHT + LAYOUT_DOTS_WEIGHT));
         flLayoutParams.height = flLayoutParams.width;
-        flMenu.setLayoutParams(flLayoutParams);
+        ibMenu.setLayoutParams(flLayoutParams);
 
         int menuPadding = flLayoutParams.width / 10;
-        flMenu.setPadding(menuPadding,menuPadding,menuPadding,menuPadding);
+        ibMenu.setPadding(menuPadding,menuPadding,menuPadding,menuPadding);
 
         viewPager.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_VIEWPAGER_WEIGHT));
         llPageIndicator.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, LAYOUT_DOTS_WEIGHT));

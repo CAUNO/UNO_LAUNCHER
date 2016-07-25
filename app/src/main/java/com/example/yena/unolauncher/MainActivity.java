@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
 import android.
 
@@ -182,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         ibMenu = (ImageButton)findViewById(R.id.ib_menu);
 
         viewPager.addOnPageChangeListener(this);
+
 
         setIconSize();
         setLayoutWeight();

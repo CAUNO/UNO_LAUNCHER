@@ -18,7 +18,7 @@ public class GlobalKeyReceiver extends BroadcastReceiver {
 			KeyEvent key = (KeyEvent)intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
 			if (key.getAction() == KeyEvent.ACTION_UP) {
 				int keycode = key.getKeyCode();
-				if (keycode == KeyEvent.KEYCODE_PERIOD) {
+				if (keycode == KeyEvent.KEYCODE_CAPTIONS) {
 					SharedPreferences pref = context.getSharedPreferences(UNOSharedPreferences.NAME, 0);
 					if(pref.getInt(UNOSharedPreferences.IS_FOREGROUND,MainActivity.IS_IN_BACKGROUND) == MainActivity.IS_IN_BACKGROUND){
 						Intent mIntent = new Intent(context, MainActivity.class);

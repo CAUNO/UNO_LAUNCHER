@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:weightSum="3">
+    android:weightSum="4">
 
 
     <ImageButton
@@ -38,6 +38,17 @@
         android:layout_gravity="center"
         android:scaleType="centerInside"
         android:src="@drawable/menu_image_grid"
+        android:background="@drawable/state_focused_background"
+        android:layout_weight="1"/>
+
+    <ImageButton
+        android:id="@+id/ib_menu_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_gravity="center"
+        android:scaleType="centerInside"
+        android:src="@drawable/menu_image_information"
         android:background="@drawable/state_focused_background"
         android:layout_weight="1"/>
 

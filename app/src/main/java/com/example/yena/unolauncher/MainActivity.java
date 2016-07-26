@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private LinearLayout llMain;
     private RelativeLayout rlTitle;
     private LinearLayout llPageIndicator;
-//    private FrameLayout flMenu;
     private ImageButton ibMenu;
     private List<AppListFragment> fragments = new ArrayList<AppListFragment>();
 
@@ -175,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         rlTitle = (RelativeLayout) findViewById(R.id.rl_title);
         viewPager = (ViewPager) findViewById(R.id.vp_main);
         llPageIndicator = (LinearLayout) findViewById(R.id.ll_count_dots);
-//        flMenu = (FrameLayout)findViewById(R.id.fl_menu);
         ibMenu = (ImageButton)findViewById(R.id.ib_menu);
 
         viewPager.addOnPageChangeListener(this);
@@ -268,6 +266,19 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setDotResource();
     }
 
+    private void infoDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getString(R.string.app_info_title));
+        builder.setMessage(this.getResources().getString(R.string.version)+" : "+ BuildConfig.VERSION_NAME);
+        builder.setPositiveButton(getString(R.string.confirm),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.cancel();
+                    }
+                });
+        builder.show();
+    }
+
     private void setDotResource(){
         switch (themeValue){
             case ThemeSetting.THEME1 :
@@ -294,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         ImageButton ibDelete = (ImageButton)dialog.findViewById(R.id.ib_menu_delete);
         ImageButton ibTheme = (ImageButton)dialog.findViewById(R.id.ib_menu_background);
         ImageButton ibGrid = (ImageButton)dialog.findViewById(R.id.ib_menu_grid);
+        ImageButton ibInfo = (ImageButton)dialog.findViewById(R.id.ib_menu_information);
 
         ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,8 +337,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             }
         });
 
+        ibInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                infoDialog();
+            }
+        });
+
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-        params.width = (int)(displayWidth / 6);
+        params.width = (int)(displayWidth / 5);
         params.height = (int)((params.width / 3) *1.2);
         params.x = ibMenu.getLeft();
         params.y = rlTitle.getHeight();

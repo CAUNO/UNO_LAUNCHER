@@ -20,5 +20,7 @@
     <string name="theme2">Blue</string>
     <string name="theme3">Green</string>
     <string name="theme_dialog_title">Theme</string>
+    <string name="app_info_title">About App</string>
+    <string name="version">version</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

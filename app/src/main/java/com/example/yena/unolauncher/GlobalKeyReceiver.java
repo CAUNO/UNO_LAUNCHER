@@ -19,10 +19,10 @@ public class GlobalKeyReceiver extends BroadcastReceiver {
 			if (key.getAction() == KeyEvent.ACTION_UP) {
 				int keycode = key.getKeyCode();
 				if (keycode == KeyEvent.KEYCODE_CAPTIONS) {
-					SharedPreferences pref = context.getSharedPreferences(UNOSharedPreferences.NAME, 0);
-					if(pref.getInt(UNOSharedPreferences.IS_FOREGROUND,MainActivity.IS_IN_BACKGROUND) == MainActivity.IS_IN_BACKGROUND){
 						Intent mIntent = new Intent(context, MainActivity.class);
-						mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					mIntent.setAction(Intent.ACTION_MAIN);
+					mIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+						//mIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 						mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						try {
 							context.startActivity(mIntent);
@@ -30,7 +30,7 @@ public class GlobalKeyReceiver extends BroadcastReceiver {
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
-					}
+
 				}
 			}
 		}

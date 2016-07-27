@@ -3,13 +3,11 @@ package com.example.yena.unolauncher;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,22 +31,16 @@ public class AppListFragment extends Fragment {
     private int viewPagerWidth;
     private int viewPagerHeight;
     private boolean deleteBadgeViewVisibility;
+    private int theme;
+
     private GridView gridView;
-    private SharedPreferences pref;
 
     public AppListFragment() {
 
     }
 
     @SuppressLint("ValidFragment")
-    public AppListFragment(List<ResolveInfo> apps, int iconSize, int columnNumber) {
-        this.apps = apps;
-        this.iconSize = iconSize;
-        this.columnNumber = columnNumber;
-    }
-
-    @SuppressLint("ValidFragment")
-    public AppListFragment(List<ResolveInfo> apps, int iconSize, int columnNumber, int rowNumber, int viewPagerWidth, int viewPagerHeight) {
+    public AppListFragment(List<ResolveInfo> apps, int iconSize, int columnNumber, int rowNumber, int viewPagerWidth, int viewPagerHeight, int theme) {
         this.apps = apps;
         this.iconSize = iconSize;
         this.columnNumber = columnNumber;
@@ -56,10 +48,11 @@ public class AppListFragment extends Fragment {
         this.viewPagerWidth = viewPagerWidth;
         this.viewPagerHeight = viewPagerHeight;
         this.deleteBadgeViewVisibility = false;
+        this.theme = theme;
     }
 
     @SuppressLint("ValidFragment")
-    public AppListFragment(List<ResolveInfo> apps, int iconSize, int columnNumber, int rowNumber, int viewPagerWidth, int viewPagerHeight, boolean deleteBadgeViewVisibility){
+    public AppListFragment(List<ResolveInfo> apps, int iconSize, int columnNumber, int rowNumber, int viewPagerWidth, int viewPagerHeight, boolean deleteBadgeViewVisibility, int theme) {
         this.apps = apps;
         this.iconSize = iconSize;
         this.columnNumber = columnNumber;
@@ -67,6 +60,7 @@ public class AppListFragment extends Fragment {
         this.viewPagerWidth = viewPagerWidth;
         this.viewPagerHeight = viewPagerHeight;
         this.deleteBadgeViewVisibility = deleteBadgeViewVisibility;
+        this.theme = theme;
     }
 
 
@@ -104,14 +98,14 @@ public class AppListFragment extends Fragment {
             ResolveInfo clickedResolveInfo = (ResolveInfo) parent.getItemAtPosition(position);
             ActivityInfo clickedActivityInfo = clickedResolveInfo.activityInfo;
 
-            if(deleteBadgeViewVisibility){
+            if (deleteBadgeViewVisibility) {
                 Uri packageURI = Uri.parse("package:" + clickedActivityInfo.packageName);
                 Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageURI)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                                 | Intent.FLAG_ACTIVITY_NEW_TASK
                                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(uninstallIntent);
-            } else{
+            } else {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_LAUNCHER);
                 intent.setClassName(clickedActivityInfo.applicationInfo.packageName, clickedActivityInfo.name);
@@ -166,11 +160,16 @@ public class AppListFragment extends Fragment {
             params.width = iconSize;
             params.height = iconSize;
             imageView.setLayoutParams(params);
-            TextView textView = (TextView) view.findViewById(R.id.tv_item);
             imageView.setImageDrawable(resolveInfo.loadIcon(getActivity().getPackageManager()));
-            textView.setText(resolveInfo.loadLabel(getActivity().getPackageManager()).toString());
+//            imageView.setBackground(getResources().getDrawable(R.drawable.rounded_border));
 
-            if(deleteBadgeViewVisibility){
+            TextView textView = (TextView) view.findViewById(R.id.tv_item);
+            textView.setText(resolveInfo.loadLabel(getActivity().getPackageManager()).toString());
+            if (theme == ThemeSetting.THEME1) {
+                textView.setTextColor(getResources().getColor(R.color.white));
+            }
+
+            if (deleteBadgeViewVisibility) {
                 BadgeView badgeView = new BadgeView(getActivity().getApplicationContext(), imageView);
                 badgeView.setText("x");
                 badgeView.show();
@@ -181,7 +180,7 @@ public class AppListFragment extends Fragment {
 
         @Override
         public int getCount() {
-            if(appList == null){
+            if (appList == null) {
                 return 0;
             }
             return appList.size();

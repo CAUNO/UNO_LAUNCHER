@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         llPageIndicator.removeAllViews();
         dotsCount = pagerAdapter.getCount();
         if (dotsCount == 0) {
-            Toast.makeText(MainActivity.this, R.string.error_message_delete, Toast.LENGTH_LONG);
+            Toast.makeText(getApplicationContext(), R.string.error_message_delete, Toast.LENGTH_LONG).show();
         } else {
             dots = new ImageView[dotsCount];
 

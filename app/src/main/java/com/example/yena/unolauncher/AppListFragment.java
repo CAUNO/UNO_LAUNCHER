@@ -25,6 +25,9 @@ public class AppListFragment extends Fragment {
     private static final double HEIGHT_RATE = 0.9;
 
     private List<ResolveInfo> apps;
+
+
+
     private int iconSize;
     private int columnNumber;
     private int rowNumber;

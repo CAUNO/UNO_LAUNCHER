@@ -24,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,22 +132,26 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void setUIPageViewController() {
         llPageIndicator.removeAllViews();
         dotsCount = pagerAdapter.getCount();
-        dots = new ImageView[dotsCount];
+        if (dotsCount == 0) {
+            Toast.makeText(MainActivity.this, R.string.error_message_delete, Toast.LENGTH_LONG);
+        } else {
+            dots = new ImageView[dotsCount];
 
-        for (int i = 0; i < dotsCount; i++) {
-            dots[i] = new ImageView(this);
-            dots[i].setImageDrawable(getResources().getDrawable(nonSelectedDotResource));
+            for (int i = 0; i < dotsCount; i++) {
+                dots[i] = new ImageView(this);
+                dots[i].setImageDrawable(getResources().getDrawable(nonSelectedDotResource));
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
 
-            params.setMargins((int) (0.01 * displayWidth), 0, (int) (0.01 * displayWidth), 0);
-            llPageIndicator.addView(dots[i], params);
+                params.setMargins((int) (0.01 * displayWidth), 0, (int) (0.01 * displayWidth), 0);
+                llPageIndicator.addView(dots[i], params);
+            }
+
+            dots[0].setImageDrawable(getResources().getDrawable(selectedDotResource));
         }
-
-        dots[0].setImageDrawable(getResources().getDrawable(selectedDotResource));
     }
 
     private void init() {
